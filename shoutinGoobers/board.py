@@ -19,29 +19,26 @@ class Board():
         """Board class constructor."""
 
         # Initialize a screen for display
-        width, height = 768, 512
-        self.screen = pygame.display.set_mode((width, height))
+        self.width = 924
+        self.height = 512
+        self.screen = pygame.display.set_mode((self.width, self.height))
+
+        # Set initial score to zero
+        self.score = 0
 
         # Load graphics
         self.backgroundImage = pygame.image.load("resources/images/backgroundImage.png")
-#backgroundImage.png
-#cannon.png
-#cannonOrig.jpg
-#chocolateDrop.png
-#chocolateDropOrig.jpg
-#peanutOrig.png
-#peanutWithChocolate.png
-#peanut_higherResolution.png
-#peanut_lowerOrig.png
-#peanut_lowerResolution.png
+        self.cannon = pygame.image.load("resources/images/cannon.png")
+        self.chocolateDrop = pygame.image.load("resources/images/chocolateDrop.png")
+        self.peanutOrig = pygame.image.load("resources/images/peanutOrig.png")
+        self.peanutWithChocolate = pygame.image.load("resources/images/peanutWithChocolate.png")
+        self.scorePanel = pygame.image.load("resources/images/scorePanel.png")
 
         # Set the name on the window
         pygame.display.set_caption("Shootin' Goobers")
 
         # Set board start: start or update
         self.state = "start"
-
-    #def draw(self):
 
     def start(self):
         """This function displayes the game's start menu."""
@@ -54,7 +51,7 @@ class Board():
             startLabel = startFont.render("Press spacebar to start!", 1, (255, 255, 255))
 
             # Draw surface
-            self.screen.blit(startLabel, (60, 200))
+            self.screen.blit(startLabel, (140, 200))
 
             # Loop through the events
             for event in pygame.event.get():
@@ -74,12 +71,26 @@ class Board():
         # Clear the screen
         self.screen.fill(0)
 
+        # If board state is start, show the start menu
         if self.state == "start":
             self.start()
 
+        # Set the background image
         self.screen.blit(self.backgroundImage, (0, 0))
 
-        #Draw the board
+        # Set the score panel
+        for i in range(int(math.ceil(self.height/float(self.scorePanel.get_height())))):
+            self.screen.blit(self.scorePanel, (self.backgroundImage.get_width(), self.scorePanel.get_height()*i))
+            self.screen.blit(self.scorePanel, (self.backgroundImage.get_width() + self.scorePanel.get_width(), self.scorePanel.get_height()*i))
+
+        # Draw clock
+        clockFont = pygame.font.Font(None, 44)
+        clockText = clockFont.render(str((180000-pygame.time.get_ticks())/60000)+":"+str((180000-pygame.time.get_ticks())/1000%60).zfill(2), True, (255, 255, 255))
+        textRect = clockText.get_rect()
+        textRect.topright = [870, 35]
+        self.screen.blit(clockText, textRect)
+
+        #TODO show score too
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
