@@ -26,6 +26,12 @@ class Board():
         # Set initial score to zero
         self.score = 0
 
+        # Set initial position of cannon
+        self.cannonPosition = [344, 393]
+
+        # Set initial state of keys (K_a and K_d): [K_a: False, K_d: False]
+        self.keysState = [False, False]
+
         # Load graphics
         self.backgroundImage = pygame.image.load("resources/images/backgroundImage.png")
         self.cannon = pygame.image.load("resources/images/cannon.png")
@@ -41,7 +47,7 @@ class Board():
         self.state = "start"
 
     def start(self):
-        """This function displayes the game's start menu."""
+        """This function displays the game's start menu."""
 
         while(1):
             # Create font
@@ -56,6 +62,7 @@ class Board():
             # Loop through the events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_SPACE:
@@ -78,6 +85,9 @@ class Board():
         # Set the background image
         self.screen.blit(self.backgroundImage, (0, 0))
 
+        # Set the cannon
+        self.screen.blit(self.cannon, (self.cannonPosition[0], self.cannonPosition[1]))
+
         # Set the score panel
         for i in range(int(math.ceil(self.height/float(self.scorePanel.get_height())))):
             self.screen.blit(self.scorePanel, (self.backgroundImage.get_width(), self.scorePanel.get_height()*i))
@@ -85,15 +95,49 @@ class Board():
 
         # Draw clock
         clockFont = pygame.font.Font(None, 44)
-        clockText = clockFont.render(str((180000-pygame.time.get_ticks())/60000)+":"+str((180000-pygame.time.get_ticks())/1000%60).zfill(2), True, (255, 255, 255))
+        clockText = clockFont.render(str((180000-pygame.time.get_ticks())/60000)+":"+str((180000-pygame.time.get_ticks())/1000 % 60).zfill(2), True, (255, 255, 255))
         textRect = clockText.get_rect()
-        textRect.topright = [870, 35]
+        textRect.topright = [875, 55]
         self.screen.blit(clockText, textRect)
 
-        #TODO show score too
+        # Show score too
+        scoreFont = pygame.font.SysFont(None, 44)
+        scoreIntegerFont = pygame.font.SysFont(None, 35)
+        scoreText = scoreFont.render("Score", 1, (255, 255, 255))
+        myScore = scoreIntegerFont.render(str(self.score), 1, (255, 255, 255))
+        self.screen.blit(scoreText, (805, 425))
+        self.screen.blit(myScore, (840, 465))
+
+        # Display game name on sidebar
+        gameNameFont = pygame.font.Font("resources/fonts/xCelsion.ttf", 20)
+        gameNameText1 = gameNameFont.render("Shootin'", 1, (125, 255, 155))
+        gameNameText2 = gameNameFont.render("Goobers", 1, (125, 255, 155))
+        self.screen.blit(gameNameText1, (780, 225))
+        self.screen.blit(gameNameText2, (778, 255))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_q:
+                    pygame.quit()
+                    sys.exit()
+                if event.key == K_a:
+                    self.keysState[0] = True
+                if event.key == K_d:
+                    self.keysState[1] = True
+            if event.type == pygame.KEYUP:
+                if event.key == K_a:
+                    self.keysState[0] = False
+                if event.key == K_d:
+                    self.keysState[1] = False
 
+        # Move cannon if the keys A or D are pressed
+        if self.keysState[0]:
+            self.cannonPosition[0] -= 5
+        if self.keysState[1]:
+            self.cannonPosition[0] += 5
+
+        # Update the full display Surface to the screen
         pygame.display.flip()

@@ -8,14 +8,17 @@ import pygame
 from pygame.locals import *
 import board
 
+
 def main(argc=None, argv=None):
-    #Initialize all imported Pygame modules
+    """The main module where the game starts."""
+
+    # Initialize all imported Pygame modules
     pygame.init()
 
-    #Create a board object
+    # Create a board object
     boardObj = board.Board()
 
-    #Start the game and keep it running
+    # Start the game and keep it running
     while(1):
         boardObj.update()
 
