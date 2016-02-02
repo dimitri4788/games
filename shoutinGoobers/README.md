@@ -8,6 +8,7 @@ To Play
 ```sh
 python game.py
 ```
+Use keys **a** and **d** to move left and right and **right shift** to shoot the chocolate drop.
 
 Author
 ------
