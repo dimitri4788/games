@@ -15,6 +15,9 @@ def main(argc=None, argv=None):
     # Initialize all imported Pygame modules
     pygame.init()
 
+    # Initialize mixer
+    pygame.mixer.init()
+
     # Create a board object
     boardObj = board.Board()
 

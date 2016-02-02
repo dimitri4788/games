@@ -59,6 +59,10 @@ class Board():
         self.peanutWithChocolateImage = pygame.image.load("resources/images/peanutWithChocolateSmall.png")
         self.scorePanelImage = pygame.image.load("resources/images/scorePanel.png")
 
+        # Load audio files
+        self.hit = pygame.mixer.Sound("resources/audio/hit.wav")
+        self.hit.set_volume(0.05)
+
     def start(self):
         """This function displays the game's start menu."""
 
@@ -167,6 +171,7 @@ class Board():
                 bullrect.left = cdrop[0]
                 bullrect.top = cdrop[1]
                 if peanutRect.colliderect(bullrect):
+                    self.hit.play()
                     self.peanuts.pop(index)
                     self.peanutsGotHit.append(self.peanutWithChocolateImage)
                     self.chocolateDrops.pop(index1)
@@ -191,7 +196,7 @@ class Board():
         textRect.topright = [875, 55]
         self.screen.blit(clockText, textRect)
 
-        # Show score too
+        # Show player score
         scoreFont = pygame.font.SysFont(None, 44)
         scoreIntegerFont = pygame.font.SysFont(None, 35)
         scoreText = scoreFont.render("Score", 1, (255, 255, 255))
@@ -199,7 +204,7 @@ class Board():
         self.screen.blit(scoreText, (805, 425))
         self.screen.blit(myScore, (840, 465))
 
-        # When peanut gets hit by chocolateDrop, add it to the side panel
+        # When a peanut gets hit by chocolateDrop, add it to the side panel
         hIndex = 771
         vIndex = 280
         if self.peanutsGotHit:
